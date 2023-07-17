@@ -2,22 +2,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { getProviders, signIn, signOut } from 'next-auth/react';
+import { getProviders, signIn, signOut, useSession } from 'next-auth/react';
 
 type Props = {};
 
 const Nav = (props: Props) => {
-  const isUserLoggedIn = true;
+  const { data: session } = useSession();
 
   const [providers, setProviders] = useState<any>(null);
   const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
 
   useEffect(() => {
-    const _setProviders = async () => {
-      // const response = await getProviders();
-      // setProviders(response);
+    const setupProviders = async () => {
+      const response = await getProviders();
+      setProviders(response);
     };
-    _setProviders();
+    setupProviders();
   }, []);
 
   const handleSignOut = () => {};
@@ -37,10 +37,10 @@ const Nav = (props: Props) => {
 
       {/* Mobile Navigation */}
       <div className="sm:hidden flex relative">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex">
             <Image
-              src="/assets/images/logo.svg"
+              src={session?.user?.image as string}
               width={37}
               height={37}
               className="rounded-full"
@@ -95,7 +95,7 @@ const Nav = (props: Props) => {
 
       {/* Desktop Navigation */}
       <div className="sm:flex hidden">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
               Create Post
@@ -110,7 +110,7 @@ const Nav = (props: Props) => {
             </button>
             <Link href="/profile">
               <Image
-                src="/assets/images/logo.svg"
+                src={session?.user?.image as string}
                 width={37}
                 height={37}
                 className="rounded-full"
