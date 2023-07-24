@@ -2,7 +2,7 @@ import NextAuth from 'next-auth/next';
 import GoogleProvider from 'next-auth/providers/google';
 
 import { connectToDB } from '@utils/database';
-import User from '@models/user';
+import User, { IUser } from '@models/user';
 import { SessionOptions } from 'next-auth';
 
 const handler = NextAuth({
@@ -14,7 +14,9 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      const sessionUser = await User.findOne({ email: session.user?.email });
+      const sessionUser = await User.findOne<IUser>({
+        email: session.user?.email
+      });
       const newSession = {
         ...session,
         user: { ...session.user, id: sessionUser?._id.toString() }
@@ -28,7 +30,9 @@ const handler = NextAuth({
 
         // Check if a user already exists
         try {
-          const userExists = await User.findOne({ email: profile?.email });
+          const userExists = await User.findOne<IUser>({
+            email: profile?.email
+          });
           // if not  create a new user
           if (!userExists) {
             try {

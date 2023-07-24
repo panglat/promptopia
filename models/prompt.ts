@@ -1,8 +1,9 @@
 import { Document } from 'mongodb';
-import { Schema, Types, model, models } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
+import { IUser } from './user';
 
 export interface IPrompt extends Document {
-  creator: Types.ObjectId;
+  creator: IUser;
   prompt: string;
   tag: string;
 }
