@@ -1,6 +1,13 @@
-import { Schema, model, models } from 'mongoose';
+import { Document } from 'mongodb';
+import { Schema, Types, model, models } from 'mongoose';
 
-const PromptSchema = new Schema({
+export interface IPrompt extends Document {
+  creator: Types.ObjectId;
+  prompt: string;
+  tag: string;
+}
+
+const PromptSchema = new Schema<IPrompt>({
   creator: {
     type: Schema.Types.ObjectId,
     ref: 'User'
@@ -15,5 +22,5 @@ const PromptSchema = new Schema({
   }
 });
 
-const Prompt = models.Prompt || model('Prompt', PromptSchema);
+const Prompt = models.Prompt<IPrompt> || model('Prompt', PromptSchema);
 export default Prompt;
