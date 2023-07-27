@@ -1,12 +1,25 @@
 'use client';
 import { IPrompt } from '@models/prompt';
-import { IUser } from '@models/user';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 
-type Props = { post: IPrompt; handleTagClick: (tag: string) => void };
+type Props = {
+  post: IPrompt;
+  handleEdit?: () => void | void;
+  handleDelete?: () => void | void;
+  handleTagClick?: (tag: string) => void;
+};
 
-const PromptCard = ({ post, handleTagClick }: Props) => {
+const PromptCard = ({
+  post,
+  handleEdit,
+  handleDelete,
+  handleTagClick
+}: Props) => {
+  const { data: session } = useSession();
+  const pathName = usePathname();
   const [copied, setCopied] = useState('');
 
   const handleCopy = () => {
@@ -53,8 +66,27 @@ const PromptCard = ({ post, handleTagClick }: Props) => {
         className="font-inter text-sm blue_gradient cursor-pointer"
         onClick={() => handleTagClick && handleTagClick(post.tag)}
       >
-        {post.tag}
+        #{post.tag}
       </a>
+      {
+        // @ts-ignore
+        session?.user?._id === post.creator.id && pathName === '/profile' && (
+          <div className="mt-5 flex-center gap-4 border-t border-gray-100 pt-3">
+            <a
+              className="font-inter text-sm green_gradient cursor-pointer"
+              onClick={handleEdit}
+            >
+              Edit
+            </a>
+            <a
+              className="font-inter text-sm orange_gradient cursor-pointer"
+              onClick={handleDelete}
+            >
+              Delete
+            </a>
+          </div>
+        )
+      }
     </div>
   );
 };

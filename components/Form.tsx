@@ -1,13 +1,10 @@
+import { IPrompt } from '@models/prompt';
 import Link from 'next/link';
 import React, { FormEventHandler } from 'react';
-type PostType = {
-  prompt: string;
-  tag: string;
-};
 
 type Props = {
   type: string;
-  post: PostType;
+  post: Partial<IPrompt>;
   setPost: any;
   submitting: any;
   handleSubmit: FormEventHandler<HTMLFormElement>;

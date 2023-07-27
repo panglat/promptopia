@@ -1,5 +1,6 @@
 'use client';
 import Form from '@components/Form';
+import { IPrompt } from '@models/prompt';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { FormEvent, useState } from 'react';
@@ -10,7 +11,7 @@ const CreatePrompt = (props: Props) => {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const { data: session } = useSession();
-  const [post, setPost] = useState({
+  const [post, setPost] = useState<Partial<IPrompt>>({
     prompt: '',
     tag: ''
   });
